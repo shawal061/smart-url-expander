@@ -1,73 +1,118 @@
-// frontend/src/App.jsx
 import { useState } from "react";
 import axios from "axios";
+import { AnimatePresence, motion } from "framer-motion";
 import "./App.css";
 
-function App() {
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
+export default function App() {
   const [url, setUrl] = useState("");
-  const [result, setResult] = useState(null);
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!url) return;
+
     setLoading(true);
     setError(null);
+    setData(null);
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/expand`,
-        { url }
-      );
-      setResult(res.data);
-    } catch (err) {
-      setError(err.response?.data?.error || "Something went wrong");
+      const res = await axios.post(`${API_URL}/expand`, { url });
+      setData(res.data);
+    } catch {
+      setError("Failed to expand URL");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="app">
-      <h1>Smart URL Expander</h1>
-      <form onSubmit={handleSubmit}>
+    <div className="page">
+      <header className="header">
+        <h1>🔗 Smart URL Expander</h1>
+        <p>See where links REALLY go</p>
+      </header>
+
+      <motion.form
+        className="input-card"
+        onSubmit={handleSubmit}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         <input
-          type="text"
-          placeholder="Enter URL"
+          type="url"
+          placeholder="Paste a shortened or suspicious URL"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
         />
-        <button type="submit" disabled={loading}>
-          {loading ? "Expanding..." : "Expand URL"}
+        <button disabled={loading}>
+          {loading ? "Analyzing..." : "Expand URL"}
         </button>
-      </form>
+      </motion.form>
+
+      {loading && (
+        <motion.div
+          className="loader"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          🔍 Expanding link…
+        </motion.div>
+      )}
 
       {error && <p className="error">{error}</p>}
 
-      {result && (
-        <div className="result">
-          <p><strong>Original URL:</strong> {result.originalUrl}</p>
-          <p><strong>Final URL:</strong> {result.finalUrl}</p>
-          <p><strong>Redirects:</strong></p>
-          <ol>
-            {result.redirects.map((r, i) => (
-              <li key={i}>{r.url} ({r.status})</li>
-            ))}
-          </ol>
-          <p><strong>Metadata:</strong></p>
-          <ul>
-            <li>Title: {result.metadata.title}</li>
-            <li>Description: {result.metadata.description}</li>
-            <li>Favicon: <img src={result.metadata.favicon} alt="favicon" width="16" /></li>
-          </ul>
-          <p><strong>Risk Score:</strong> {result.riskScore}</p>
-          {result.warnings.length > 0 && (
-            <p><strong>Warnings:</strong> {result.warnings.join(", ")}</p>
-          )}
-        </div>
-      )}
+      <AnimatePresence>
+        {data && (
+          <motion.div
+            className="result-card"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="final-url">
+              <span>Final Destination</span>
+              <a href={data.finalUrl} target="_blank">
+                {data.finalUrl}
+              </a>
+            </div>
+
+            <div className="risk">
+              <span className={`badge ${data.riskScore}`}>
+                Risk: {data.riskScore.toUpperCase()}
+              </span>
+              {data.warnings.map((w, i) => (
+                <p key={i} className="warning">⚠ {w}</p>
+              ))}
+            </div>
+
+            <div className="redirects">
+              <h3>Redirect Chain</h3>
+              <ol>
+                {data.redirects.map((r, i) => (
+                  <li key={i}>
+                    <span>{r.url}</span>
+                    <code>{r.status}</code>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="metadata">
+              <h3>Page Preview</h3>
+              <p><strong>{data.metadata.title}</strong></p>
+              <p>{data.metadata.description}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <footer className="footer">
+        Built for safety & transparency
+      </footer>
     </div>
   );
 }
-
-export default App;
