@@ -1,0 +1,9 @@
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --border: rgba(0, 0, 0, 0.05);
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
