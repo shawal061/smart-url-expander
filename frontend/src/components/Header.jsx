@@ -36,7 +36,7 @@ export default function Header() {
             <Link2 
               size={isMobile ? 24 : 32} 
               strokeWidth={2.5} 
-              style={{ color: "var(--primary)" }} 
+              style={{ color: "#ffffff" }} 
             />
           </div>
           <div style={{
