@@ -1,0 +1,1 @@
+import{j as t,A as e,U as r,R as o,a as s}from"./globals-B-VuFRe1.js";function a(){return t.jsxs(e,{compact:!0,children:[t.jsx("h3",{style:{textAlign:"center",color:"#6366f1"},children:"Smart URL Expander"}),t.jsx(r,{})]})}o.createRoot(document.getElementById("root")).render(t.jsx(s.StrictMode,{children:t.jsx(a,{})}));
