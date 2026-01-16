@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import Loader from "./Loader";
 import ResultCard from "./ResultCard";
+import SkeletonResult from "./SkeletonResult";
 
 const API = import.meta.env.VITE_API_BASE_URL;
 
@@ -78,7 +79,7 @@ export default function UrlForm() {
       {error && <p style={{ color: "red", marginTop: 12 }}>{error}</p>}
 
       <AnimatePresence>
-        {loading && <Loader />}
+        {loading && <SkeletonResult />}
         {result && <ResultCard data={result} />}
       </AnimatePresence>
     </div>
