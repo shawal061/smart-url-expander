@@ -2,9 +2,10 @@ export default function AppLayout({ children, compact = false }) {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        flex: 1,
         display: "flex",
         justifyContent: "center",
+        alignItems: "flex-start",
         padding: compact ? "16px" : "32px",
       }}
     >

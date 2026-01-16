@@ -6,14 +6,32 @@ import { ThemeProvider } from "./context/ThemeContext";
 
 export default function App() {
   return (
-    <>
-      <ThemeProvider>
+    <ThemeProvider>
+      <div style={styles.appContainer}>
         <Header />
-        <AppLayout>
-          <UrlForm />
-        </AppLayout>
+        <main style={styles.mainContent}>
+          <AppLayout>
+            <UrlForm />
+          </AppLayout>
+        </main>
         <Footer />
-      </ThemeProvider>
-    </>
+      </div>
+    </ThemeProvider>
   );
 }
+
+const styles = {
+  appContainer: {
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+  },
+  mainContent: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+  },
+};

@@ -8,10 +8,16 @@ html,
 body {
     margin: 0;
     padding: 0;
+    height: 100%;
+    overflow: hidden;
     background: var(--bg);
     color: var(--text);
     font-family: Inter, system-ui, sans-serif;
     transition: background 0.3s ease, color 0.3s ease;
+}
+
+#root {
+    height: 100%;
 }
 
 a {
@@ -22,7 +28,6 @@ a {
 button {
     font-family: inherit;
 }
-
 
 .skeleton {
     background: linear-gradient(90deg,
