@@ -4,22 +4,25 @@
     box-sizing: border-box;
 }
 
+html,
 body {
     margin: 0;
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    background: radial-gradient(circle at top, #eef2ff, #f8fafc);
-    color: #0f172a;
-    min-height: 100vh;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, system-ui, sans-serif;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 a {
+    color: var(--primary);
     text-decoration: none;
-    color: inherit;
 }
 
 button {
     font-family: inherit;
 }
+
 
 .skeleton {
     background: linear-gradient(90deg,
