@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Heart, Shield, Github } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -13,12 +12,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <motion.footer
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.3 }}
-      style={styles.footer}
-    >
+    <footer style={styles.footer}>
       <div style={{
         ...styles.container,
         padding: isMobile ? '1.5rem 1rem 1rem' : '2rem 2rem 1.5rem',
@@ -60,15 +54,14 @@ export default function Footer() {
             minWidth: isMobile ? 'auto' : '200px',
             textAlign: isMobile ? 'center' : 'right',
           }}>
-            <motion.div
+            <div
               style={{
                 ...styles.madeWith,
                 fontSize: isMobile ? '0.8rem' : '0.875rem',
               }}
-              whileHover={{ scale: 1.05 }}
             >
               Made with <Heart size={14} style={styles.heart} /> by developers
-            </motion.div>
+            </div>
           </div>
         </div>
         
@@ -116,7 +109,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-    </motion.footer>
+    </footer>
   );
 }
 

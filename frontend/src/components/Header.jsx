@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Link2, Moon, Sun } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { useState, useEffect } from "react";
@@ -15,12 +14,7 @@ export default function Header() {
   }, []);
   
   return (
-    <motion.header
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      style={styles.header}
-    >
+    <header style={styles.header}>
       <div style={{
         ...styles.container,
         flexDirection: isMobile ? 'column' : 'row',
@@ -32,21 +26,19 @@ export default function Header() {
           width: isMobile ? '100%' : 'auto',
           justifyContent: isMobile ? 'center' : 'flex-start',
         }}>
-          <motion.div 
+          <div 
             style={{
               ...styles.iconWrapper,
               width: isMobile ? '40px' : '48px',
               height: isMobile ? '40px' : '48px',
             }}
-            whileHover={{ rotate: 15, scale: 1.1 }}
-            transition={{ type: "spring", stiffness: 300 }}
           >
             <Link2 
               size={isMobile ? 24 : 32} 
               strokeWidth={2.5} 
               style={{ color: "var(--primary)" }} 
             />
-          </motion.div>
+          </div>
           <div style={{
             ...styles.textWrapper,
             textAlign: isMobile ? 'center' : 'left',
@@ -66,7 +58,7 @@ export default function Header() {
           </div>
         </div>
         
-        <motion.button
+        <button
           onClick={toggleTheme}
           style={{
             ...styles.themeToggle,
@@ -74,17 +66,15 @@ export default function Header() {
             top: isMobile ? '1rem' : 'auto',
             right: isMobile ? '1rem' : 'auto',
           }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
         >
           {theme === "dark" ? (
             <Sun size={20} />
           ) : (
             <Moon size={20} />
           )}
-        </motion.button>
+        </button>
       </div>
-    </motion.header>
+    </header>
   );
 }
 
