@@ -1,27 +1,40 @@
-// backend/routes/expand.js
-
 const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
 
 const analyzeRisk = require("../utils/riskAnalyzer");
 const resolveRedirects = require("../utils/redirectResolver");
+const isValidHttpUrl = require("../utils/urlValidator");
+const { getCached, setCache } = require("../utils/cache");
 
 const router = express.Router();
 
 router.post("/", async (req, res) => {
     const { url } = req.body;
 
-    if (!url) {
-        return res.status(400).json({ error: "URL is required" });
+    if (!url || !isValidHttpUrl(url)) {
+        return res.status(400).json({ error: "Invalid or unsafe URL" });
+    }
+
+    // Cache check
+    const cached = getCached(url);
+    if (cached) {
+        return res.json({ ...cached, cached: true });
     }
 
     try {
-        // Resolve redirects
         const { finalUrl, redirects } = await resolveRedirects(url);
 
-        // Fetch metadata
-        const finalResponse = await axios.get(finalUrl);
+        const finalResponse = await axios.get(finalUrl, {
+            responseType: "text",
+            maxContentLength: 1024 * 1024
+        });
+
+        const contentType = finalResponse.headers["content-type"] || "";
+        if (!contentType.includes("text/html")) {
+            throw new Error("Final URL is not HTML");
+        }
+
         const $ = cheerio.load(finalResponse.data);
 
         const faviconHref = $('link[rel="icon"]').attr("href");
@@ -32,20 +45,23 @@ router.post("/", async (req, res) => {
         const metadata = {
             title: $("title").text() || null,
             description: $('meta[name="description"]').attr("content") || null,
-            favicon,
+            favicon
         };
 
-        // Risk analysis
         const { warnings, riskScore } = analyzeRisk(redirects);
 
-        res.json({
+        const result = {
             originalUrl: url,
             finalUrl,
             redirects,
             metadata,
             riskScore,
-            warnings,
-        });
+            warnings
+        };
+
+        setCache(url, result);
+
+        res.json(result);
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ error: "Failed to expand URL" });

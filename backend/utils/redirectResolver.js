@@ -1,20 +1,38 @@
-// backend/utils/redirectResolver.js
-
 const axios = require("axios");
+
+axios.defaults.timeout = 8000;
+
+async function fetchWithFallback(url) {
+    try {
+        return await axios.head(url, {
+            maxRedirects: 0,
+            validateStatus: null
+        });
+    } catch {
+        return await axios.get(url, {
+            maxRedirects: 0,
+            validateStatus: null
+        });
+    }
+}
 
 async function resolveRedirects(startUrl, maxRedirects = 10) {
     const redirects = [];
+    const visited = new Set();
+
     let currentUrl = startUrl;
 
     for (let i = 0; i < maxRedirects; i++) {
-        const response = await axios.head(currentUrl, {
-            maxRedirects: 0,
-            validateStatus: null,
-        });
+        if (visited.has(currentUrl)) {
+            throw new Error("Redirect loop detected");
+        }
+        visited.add(currentUrl);
+
+        const response = await fetchWithFallback(currentUrl);
 
         redirects.push({
             url: currentUrl,
-            status: response.status,
+            status: response.status
         });
 
         if (
