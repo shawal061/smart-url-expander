@@ -7,9 +7,11 @@ const resolveRedirects = require("../utils/redirectResolver");
 const isValidHttpUrl = require("../utils/urlValidator");
 const { getCached, setCache } = require("../utils/cache");
 
+const apiKeyAuth = require("../middleware/apiKeyAuth");
+
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", apiKeyAuth, async (req, res) => {
     const { url } = req.body;
 
     if (!url || !isValidHttpUrl(url)) {

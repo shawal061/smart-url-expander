@@ -8,12 +8,12 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(rateLimiter);
 
-// API versioning
-app.use("/api/v1/expand", expandRoute);
+// Public API (v1)
+app.use("/api/v1/expand", rateLimiter, expandRoute);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-    console.log(`Server running on http://localhost:${PORT}`)
-);
+
+app.listen(PORT, () => {
+    console.log(`Public API running on http://localhost:${PORT}`);
+});
