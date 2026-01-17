@@ -11,6 +11,35 @@ const apiKeyAuth = require("../middleware/apiKeyAuth");
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /expand:
+ *   post:
+ *     summary: Expand a shortened or redirected URL
+ *     tags: [URL Expansion]
+ *     security:
+ *       - ApiKeyAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [url]
+ *             properties:
+ *               url:
+ *                 type: string
+ *                 example: https://bit.ly/demo
+ *     responses:
+ *       200:
+ *         description: Expanded URL details
+ *       400:
+ *         description: Invalid URL
+ *       401:
+ *         description: Missing API key
+ *       403:
+ *         description: Invalid API key
+ */
 router.post("/", apiKeyAuth, async (req, res) => {
     const { url } = req.body;
 
